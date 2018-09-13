@@ -90,10 +90,21 @@ class AM2320:
 		#Otherwise, everything is fine and calculate the temp/humidity values
 		else:
 			#Bitshift the temperature most significant byte left by 8 bits
-			#and combine with the least significant byte.  Divide by 10 to 
-			#give the temperature in degrees celsius according to the datasheet
+			#and combine with the least significant byte. If bit 15 is 1 the
+			#temperature is negative, so get rid of b.t 15 (by bitwise AND 
+			#with 0x7f) and then make the value negative before dividing by 10
+			#according to the datasheet.  If bit 15 is zero, the temperature
+			#is positive so just divide it by 10 to get the temperature in 
+			#degrees Celsius/ 
+
 			self.temperature = ((self.raw_data[4] << 8)\
- + self.raw_data[5])/10.0
+ + self.raw_data[5])
+			if ((self.temperature & 0x80) == 0x1):
+				self.temperature = self.temperature & 0x7f
+				self.temperature = -self.temperature/10.0
+			else:
+				self.temperature = self.temperature / 10.0
+
 			#Bitshift the humidity most significant byte left by 8 bits and add
 			#it to the least significant byte.  Divide this by 10 to give the
 			#humidity in % relative humidity, according to the datasheet.
