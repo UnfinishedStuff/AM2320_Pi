@@ -6,6 +6,7 @@ import AM2320
 #Create an object from the AM2320 class called "sensor"
 sensor = AM2320.AM2320()
 
+#Do the following continuously:
 while True:
 	#Tell the sensor object to read data from the physical sensor
 	sensor.get_data()
