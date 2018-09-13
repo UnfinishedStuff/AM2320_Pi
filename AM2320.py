@@ -99,7 +99,7 @@ class AM2320:
 
 			self.temperature = ((self.raw_data[4] << 8)\
  + self.raw_data[5])
-			if ((self.temperature & 0x80) == 0x1):
+			if ((self.temperature & 0x80) == 0x80):
 				self.temperature = self.temperature & 0x7f
 				self.temperature = -self.temperature/10.0
 			else:
